@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Бриджертоны | Сезон 1 | 1080p</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700;800;900&family=Spectral:wght@200;400;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #07070b; --bg2: #11111a; --bg3: #1a1a26; --bg4: #262636;
+  --pink: #b8a4e3; --pink2: #9a82d4; --pink3: #d4c4f0;
+  --pinkglow: rgba(184,164,227,0.55);
+  --green: #5fd4d6; --green2: #3aa9ab; --green3: #a0e8e9;
+  --greenglow: rgba(95,212,214,0.45);
+  --text: #ece8f5; --text2: #b8b0c8; --text3: #7a7290;
+  --border: rgba(184,164,227,0.18); --border-pink: rgba(184,164,227,0.38);
+  --overlay-rgb: 7,7,11;
+}
+body {
+  background: var(--bg); color: var(--text);
+  font-family: 'Raleway', sans-serif; font-weight: 500; min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 80%, rgba(184,164,227,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 90%, rgba(95,212,214,0.08) 0%, transparent 55%);
+}
+#admin-modal { display:none; position:fixed; inset:0; background:rgba(40,25,55,0.6); backdrop-filter:blur(6px); z-index:9999; align-items:center; justify-content:center; }
+#admin-modal.open { display:flex; }
+.modal-box { background:var(--bg2); border:1px solid var(--border-pink); border-radius:8px; padding:2.5rem; width:420px; max-width:90vw; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+.modal-box h2 { font-family:'Cinzel',serif; font-size:1.8rem; letter-spacing:0.1em; color:var(--pink2); margin-bottom:0.4rem; }
+.modal-box p { font-size:0.8rem; color:var(--text2); margin-bottom:1.5rem; }
+.modal-input { width:100%; padding:10px 14px; background:var(--bg2); border:1px solid var(--border); border-radius:4px; color:var(--text); font-family:'Raleway',sans-serif; font-size:0.9rem; margin-bottom:1rem; outline:none; transition:border-color 0.2s; }
+.modal-input:focus { border-color:var(--pink); }
+.modal-error { font-size:0.78rem; color:#c0556a; margin-bottom:0.75rem; display:none; }
+.modal-error.show { display:block; }
+header { background:linear-gradient(180deg,rgba(7,7,11,0.92) 0%,rgba(7,7,11,0.55) 100%); backdrop-filter:blur(8px); padding:0 4%; position:sticky; top:0; z-index:100; border-bottom:1px solid var(--border-pink); }
+.header-inner { max-width:1400px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:68px; }
+.logo { display:flex; align-items:center; gap:1rem; }
+.logo-text { display:flex; align-items:center; gap:0.5rem; line-height:1; }
+.logo-mark { font-family:'Cinzel',serif; font-size:1.5rem; color:var(--pink2); letter-spacing:0.15em; font-weight:600; }
+.logo-sep { width:1px; height:28px; background:var(--border-pink); }
+.logo-sub { font-size:0.62rem; color:var(--text2); letter-spacing:0.2em; text-transform:uppercase; line-height:1.6; font-weight:500; }
+.header-right { display:flex; align-items:center; gap:0.75rem; }
+.admin-pill { background:var(--pink); color:#fff; font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:5px 14px; border-radius:20px; cursor:pointer; border:none; font-family:'Raleway',sans-serif; transition:background 0.2s; }
+.admin-pill:hover { background:var(--pink2); }
+.admin-pill.active { background:var(--bg4); color:var(--text); }
+.hero-banner { position:relative; overflow:hidden; min-height:640px; display:flex; flex-direction:column; justify-content:flex-end; }
+.hero-bg-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center center; filter:saturate(1.1) brightness(0.7) contrast(1.05); }
+.hero-overlay-top { position:absolute; top:0; left:0; right:0; height:120px; background:linear-gradient(180deg,rgba(var(--overlay-rgb),0.4) 0%,transparent 100%); z-index:1; }
+.hero-overlay-bottom { position:absolute; bottom:0; left:0; right:0; height:100%; background:linear-gradient(0deg,rgba(var(--overlay-rgb),1) 0%,rgba(var(--overlay-rgb),0.92) 15%,rgba(var(--overlay-rgb),0.5) 40%,rgba(var(--overlay-rgb),0.15) 70%,rgba(var(--overlay-rgb),0) 100%); z-index:1; }
+.hero-fade-bottom { position:absolute; bottom:-2px; left:0; right:0; height:120px; background:linear-gradient(0deg, rgba(var(--overlay-rgb),1) 0%, rgba(var(--overlay-rgb),0) 100%); z-index:2; pointer-events:none; }
+.hero-title-shade { position:absolute; left:0; bottom:0; width:60%; height:100%; background:linear-gradient(90deg, rgba(7,7,11,0.55) 0%, rgba(7,7,11,0.25) 60%, transparent 100%); z-index:1; pointer-events:none; }
+.hero-content { position:relative; z-index:2; padding:2.5rem 4% 3rem; max-width:1400px; margin:0 auto; width:100%; }
+.hero-eyebrow { font-size:0.68rem; letter-spacing:0.4em; color:var(--green2); text-transform:uppercase; margin-bottom:1rem; font-weight:700; }
+.hero-title { font-family:'Cinzel',serif; font-size:clamp(2.2rem,5vw,4rem); font-weight:600; letter-spacing:0.06em; line-height:1; text-transform:uppercase; margin-bottom:0.5rem; background:linear-gradient(to bottom,#d4c4f0 0%,#b8a4e3 55%,#5fd4d6 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 2px 18px rgba(184,164,227,0.55)); }
+.hero-subtitle { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.1rem,2.4vw,1.7rem); font-weight:400; letter-spacing:0.3em; line-height:1.1; text-transform:uppercase; color:var(--text2); padding-left:0.25rem; margin-bottom:1.25rem; }
+.hero-meta { display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; margin-bottom:1.5rem; }
+.badge { padding:5px 13px; border-radius:20px; font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+.badge-pink { background:var(--pink); color:#fff; }
+.badge-green { background:var(--green); color:#fff; }
+.badge-outline { background:transparent; border:1px solid var(--border-pink); color:var(--pink2); }
+.badge-gray { background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--text); backdrop-filter:blur(4px); }
+.hero-desc { font-size:0.92rem; color:var(--text); max-width:600px; line-height:1.7; font-weight:400; font-family:'Cormorant Garamond',serif; font-size:1.1rem; }
+#ep-count-badge { color:var(--pink2); }
+.container { max-width:1400px; margin:0 auto; padding:2rem 4%; }
+#player-section { background:var(--bg2); border-radius:10px; overflow:hidden; margin-bottom:2.5rem; border:1px solid var(--border); box-shadow:0 12px 50px rgba(0,0,0,0.24); }
+#player-header { background:linear-gradient(90deg,var(--bg2),var(--bg3)); padding:1rem 1.5rem; border-bottom:1px solid var(--border-pink); display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+#now-playing { font-family:'Cinzel',serif; font-size:1.05rem; letter-spacing:0.1em; color:var(--pink2); }
+#player-container { background:#0a0508; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; position:relative; }
+#main-video { width:100%; height:100%; display:none; }
+#player-placeholder { text-align:center; padding:4rem; color:#fff; }
+#player-placeholder .big-icon { width:80px; height:80px; border-radius:50%; border:2px solid rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem; font-size:2rem; color:rgba(255,255,255,0.4); }
+#player-placeholder p { color:rgba(255,255,255,0.5); font-size:0.9rem; letter-spacing:0.1em; }
+.btn { padding:8px 18px; border-radius:20px; font-family:'Raleway',sans-serif; font-size:0.76rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; border:1px solid var(--border); background:var(--bg2); color:var(--text); transition:all 0.18s; }
+.btn:hover { background:var(--bg2); border-color:var(--pink); }
+.btn.primary { background:var(--pink); color:#fff; border-color:var(--pink); }
+.btn.primary:hover { background:var(--pink2); border-color:var(--pink2); }
+.btn.danger { border-color:rgba(192,85,106,0.4); color:#c0556a; background:transparent; }
+.btn.danger:hover { background:rgba(192,85,106,0.08); }
+.btn-nav { background:rgba(138,111,165,0.12); border:1px solid var(--border-pink); color:var(--pink2); padding:7px 16px; border-radius:20px; font-size:0.72rem; font-weight:700; letter-spacing:0.08em; cursor:pointer; font-family:'Raleway',sans-serif; transition:all 0.18s; }
+.btn-nav:hover { background:rgba(138,111,165,0.22); }
+.section-title { font-family:'Cinzel',serif; font-size:1.5rem; letter-spacing:0.18em; color:var(--text); margin-bottom:1.5rem; font-weight:500; display:flex; align-items:center; gap:0.85rem; text-transform:uppercase; }
+.section-title .red-bar { width:4px; height:26px; background:var(--pink); border-radius:2px; box-shadow:0 0 12px var(--pinkglow); }
+.section-title .line { flex:1; height:1px; background:var(--border); margin-left:0.5rem; }
+.episodes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem; margin-bottom:2.5rem; }
+.episode-card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; overflow:hidden; cursor:pointer; transition:transform 0.22s,border-color 0.2s,box-shadow 0.22s; position:relative; }
+.episode-card:hover { transform:translateY(-4px); border-color:var(--pink); box-shadow:0 14px 40px rgba(0,0,0,0.36); z-index:2; }
+.episode-card.active { border-color:var(--pink); box-shadow:0 0 0 2px var(--pink3); }
+.episode-card.active::after { content:'▶ ИДЁТ'; position:absolute; top:8px; right:8px; background:var(--pink); color:#fff; font-size:0.58rem; font-weight:700; letter-spacing:0.1em; padding:3px 9px; border-radius:12px; font-family:'Raleway',sans-serif; }
+.ep-thumb { aspect-ratio:16/9; background:linear-gradient(135deg,#1a1a26,#262636); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+.ep-thumb::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,0.36) 100%); }
+.ep-number-bg { font-family:'Cinzel',serif; font-size:3.5rem; font-weight:500; color:rgba(138,111,165,0.35); letter-spacing:-0.02em; user-select:none; }
+.play-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(60,40,80,0.35); opacity:0; transition:opacity 0.2s; z-index:2; }
+.episode-card:hover .play-overlay { opacity:1; }
+.play-overlay-icon { width:48px; height:48px; background:var(--pink); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.1rem; padding-left:4px; box-shadow:0 0 30px var(--pinkglow); }
+.ep-info { padding:0.9rem 1rem 1rem; }
+.ep-num { font-size:0.65rem; color:var(--pink); letter-spacing:0.14em; text-transform:uppercase; font-weight:700; margin-bottom:4px; }
+.ep-title { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--text); font-weight:600; line-height:1.3; }
+.ep-status { margin-top:7px; font-size:0.7rem; letter-spacing:0.04em; }
+.ep-status.uploaded { color:var(--green2); }
+.ep-status.empty { color:var(--text3); }
+.admin-only { display:none; }
+body.admin-mode .admin-only { display:block; }
+body.admin-mode .ep-upload-btn { display:block; }
+.ep-upload-btn { display:none; margin-top:8px; width:100%; padding:6px; background:transparent; border:1px dashed var(--border-pink); border-radius:6px; color:var(--text3); font-size:0.68rem; cursor:pointer; font-family:'Raleway',sans-serif; font-weight:600; letter-spacing:0.05em; transition:all 0.18s; }
+.ep-upload-btn:hover { border-color:var(--pink); color:var(--pink); background:rgba(138,111,165,0.05); }
+#admin-panel { background:var(--bg2); border:1px solid var(--border-pink); border-radius:10px; padding:1.5rem; margin-bottom:2rem; display:none; box-shadow:0 8px 30px rgba(0,0,0,0.16); }
+body.admin-mode #admin-panel { display:block; }
+.admin-section-label { font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--pink2); font-weight:700; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border); }
+.admin-row { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-bottom:0.75rem; }
+.admin-row:last-of-type { margin-bottom:0; }
+.shared-info { background:rgba(138,111,165,0.06); border:1px solid var(--border); border-radius:6px; padding:0.85rem 1rem; margin-bottom:1rem; font-size:0.78rem; color:var(--text2); line-height:1.6; }
+.shared-info strong { color:var(--pink2); }
+.url-input { flex:1; padding:9px 13px; background:var(--bg2); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:'Raleway',sans-serif; font-size:0.82rem; outline:none; transition:border-color 0.2s; min-width:200px; }
+.url-input:focus { border-color:var(--pink); }
+select { padding:9px 13px; background:var(--bg2); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:'Raleway',sans-serif; font-size:0.82rem; cursor:pointer; outline:none; }
+.storage-wrap { margin-top:1.25rem; padding-top:1rem; border-top:1px solid var(--border); }
+.storage-label { display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text3); margin-bottom:6px; letter-spacing:0.05em; }
+.storage-bar { height:4px; background:var(--bg3); border-radius:3px; overflow:hidden; }
+.storage-fill { height:100%; background:var(--pink); border-radius:3px; transition:width 0.5s; width:0%; }
+.upload-progress { display:none; margin-top:0.75rem; font-size:0.78rem; color:var(--text2); }
+.progress-bar { height:3px; background:var(--bg3); border-radius:3px; margin-top:6px; overflow:hidden; }
+.progress-fill { height:100%; background:var(--pink); width:0%; transition:width 0.2s; }
+.share-box { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:1.4rem 1.6rem; margin-bottom:2rem; box-shadow:0 6px 24px rgba(0,0,0,0.12); }
+.share-box h3 { font-family:'Cinzel',serif; font-size:1.05rem; letter-spacing:0.18em; color:var(--pink2); margin-bottom:0.85rem; text-transform:uppercase; font-weight:500; }
+.share-url { display:flex; gap:0.5rem; flex-wrap:wrap; }
+.share-url input { flex:1; padding:9px 14px; background:var(--bg); border:1px solid var(--border); border-radius:6px; color:var(--text3); font-size:0.78rem; font-family:monospace; outline:none; min-width:180px; }
+.share-note { font-size:0.74rem; color:var(--text3); margin-top:0.6rem; line-height:1.5; }
+#toast { position:fixed; bottom:2rem; right:2rem; background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--pink); border-radius:6px; padding:0.85rem 1.3rem; font-size:0.82rem; color:var(--text); transform:translateY(80px); opacity:0; transition:all 0.28s cubic-bezier(0.34,1.56,0.64,1); z-index:9998; max-width:320px; box-shadow:0 10px 30px rgba(0,0,0,0.36); }
+#toast.show { transform:translateY(0); opacity:1; }
+#toast.success { border-left-color:var(--green); color:var(--green2); }
+#toast.error { border-left-color:#c0556a; color:#c0556a; }
+footer { border-top:1px solid var(--border); padding:1.75rem 4%; text-align:center; font-size:0.72rem; color:var(--text3); letter-spacing:0.12em; text-transform:uppercase; display:flex; flex-direction:column; align-items:center; gap:0.6rem; font-family:'Cinzel',serif; }
+input[type="file"] { display:none; }
+@media (max-width:600px) { .container { padding:1rem; } .episodes-grid { grid-template-columns:1fr 1fr; gap:0.6rem; } header { padding:0 1rem; } }
+</style>
+</head>
+<body class="">
+<div id="admin-modal">
+<div class="modal-box">
+<h2>Вход Админа</h2>
+<p>Только администратор может загружать и редактировать серии</p>
+<input class="modal-input" id="pwd-input" onkeydown="if(event.key==='Enter')checkPwd()" placeholder="Введите пароль" type="password">
+<div class="modal-error" id="pwd-error">Неверный пароль. Попробуйте снова.</div>
+<div style="display:flex;gap:0.5rem;">
+<button class="btn primary" onclick="checkPwd()" style="flex:1;">Войти</button>
+<button class="btn" onclick="closeAdminModal()">Отмена</button>
+</div>
+</div>
+</div>
+<header>
+<div class="header-inner">
+<div class="logo">
+<img src="https://project--e4ee60da-bea3-42cf-b3d9-03a1861a053a.lovable.app/__l5e/assets-v1/8060efd1-e705-468d-bc92-df225394a6a0/bridgerton-cameo-clear.png" alt="Bridgerton" style="height:56px;width:auto;display:block;filter:drop-shadow(0 2px 10px rgba(184,164,227,0.45));">
+<div class="logo-sep"></div>
+<div class="logo-sub">Видеоархив<br>Сезон 1 · 2020</div>
+</div>
+<div class="header-right">
+<span id="admin-status-label" style="font-size:0.7rem;color:var(--text3);letter-spacing:0.05em;display:none;">Режим администратора</span>
+</div>
+</div>
+</header>
+<div class="hero-banner">
+<img class="hero-bg-img" src="https://project--e4ee60da-bea3-42cf-b3d9-03a1861a053a.lovable.app/__l5e/assets-v1/823fc630-a17c-4c2c-86b5-fac45ec91c7c/bridgerton-hero.jpg" alt="Бриджертоны">
+<div class="hero-overlay-top"></div>
+<div class="hero-overlay-bottom"></div>
+<div class="hero-fade-bottom"></div>
+<div class="hero-title-shade"></div>
+<div class="hero-content">
+<div class="hero-eyebrow">▮ Сезон 1 · Полный · 2020</div>
+<h1 class="hero-title">Бриджертоны</h1>
+<div class="hero-subtitle">Bridgerton</div>
+<div class="hero-meta">
+<span class="badge badge-pink">1080p</span>
+<span class="badge badge-green">Дубляж</span>
+<span class="badge badge-outline">1 Сезон</span>
+<span class="badge badge-gray">2020</span>
+<span class="badge badge-gray" id="ep-count-badge">0 / 8 серий</span>
+</div>
+<div class="hero-desc">Светский Лондон эпохи Регентства, балы под звуки струнных, шёлк и шёпот в гостиных. Восемь семей дебютируют в свете — но всё внимание приковано к старшей дочери Бриджертонов Дафне и неуловимому герцогу Гастингсу. За кулисами блестящего сезона анонимная леди Уислдаун ведёт хронику скандалов, тайных взглядов и разбитых сердец. Восемь эпизодов изысканного романа — в качестве 1080p с профессиональным дубляжом.</div>
+</div>
+</div>
+<div class="container">
+<div id="player-section">
+<div id="player-header">
+<div id="now-playing">— Выберите серию —</div>
+<div style="display:flex;gap:0.5rem;align-items:center;">
+<button class="btn-nav" onclick="changeEp(-1)">◀ Пред.</button>
+<button class="btn-nav" onclick="changeEp(1)">След. ▶</button>
+</div>
+</div>
+<div id="player-container">
+<video controls id="main-video" preload="metadata" src="" style="display:none;"></video>
+<div id="player-placeholder" style="display:flex;flex-direction:column;align-items:center;">
+<div class="big-icon">▶</div>
+<p>Выберите серию ниже для просмотра</p>
+</div>
+</div>
+</div>
+<div class="section-title">
+<div class="red-bar"></div>
+Серии сезона
+<div class="line"></div>
+</div>
+<div class="episodes-grid" id="episodes-grid"></div>
+<div id="admin-panel">
+<div class="admin-section-label">⚙ Панель администратора</div>
+<div class="shared-info">
+<strong>🌐 Общий доступ через URL:</strong> вставьте прямую ссылку на видео (mp4, m3u8) — она сохранится в коде страницы и будет видна <strong>всем</strong> посетителям. Для этого нажмите «Сохранить URL», затем скачайте обновлённый файл и замените страницу на сервере.<br><br>
+<strong>💾 Локальный файл:</strong> загрузка файла с компьютера работает только в вашем браузере — другие посетители его не увидят.
+</div>
+<div class="admin-row">
+<select id="ep-select"></select>
+<input class="url-input" id="url-input" placeholder="Прямая ссылка на видео (mp4, m3u8...) — для всех посетителей" type="text">
+<button class="btn primary" onclick="saveUrl()">Сохранить URL</button>
+</div>
+<div class="admin-row">
+<button class="btn danger" onclick="clearAll()">✕ Очистить всё</button>
+<button class="btn" onclick="exportLinks()">↓ Экспорт ссылок .txt</button>
+<button class="btn danger" onclick="changePassword()">🔑 Сменить пароль</button>
+</div>
+<div class="upload-progress" id="upload-progress">
+<span id="upload-label">Загрузка...</span>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+<div class="storage-wrap">
+<div class="storage-label">
+<span>Хранилище (IndexedDB)</span>
+<span id="storage-size">0.0 МБ / ~76.8 ГБ</span>
+</div>
+<div class="storage-bar"><div class="storage-fill" id="storage-fill" style="width: 0%;"></div></div>
+</div>
+</div>
+<div class="share-box">
+<h3>Поделиться</h3>
+<div class="share-url">
+<input id="share-link" readonly type="text">
+<button class="btn primary" onclick="copyLink()">Копировать</button>
+<button class="btn" onclick="exportPageWithUrls()" style="white-space:nowrap;">↓ Скачать страницу</button>
+</div>
+<p class="share-note">Поделитесь ссылкой на эту страницу. Видео, загруженные через URL, будут доступны всем посетителям автоматически.</p>
+</div>
+<div id="toast"></div>
+<input accept="video/*" id="file-input" type="file">
+</div>
+<footer>
+<div>Бриджертоны · Сезон 1 · 2020 · 1080p · Дубляж</div>
+<button class="admin-pill" id="admin-btn" onclick="toggleAdmin()" style="opacity:0.55;font-size:0.6rem;padding:4px 12px;letter-spacing:0.1em;">Войти как админ</button>
+</footer>
+<script>
+const ADMIN_PWD_KEY = 'bridgerton_admin_pwd';
+const SESSION_KEY = 'bridgerton_admin_session';
+const DEFAULT_PWD = 'adminvlad0909_';
+
+let SHARED_URLS = {};
+
+const EPISODES = [
+  { num: 1, title: 'Бриллиант высшего сорта' },
+  { num: 2, title: 'Шок и восторг' },
+  { num: 3, title: 'Искусство обморока' },
+  { num: 4, title: 'Дело чести' },
+  { num: 5, title: 'Герцог и я' },
+  { num: 6, title: 'Шелест' },
+  { num: 7, title: 'По разные стороны' },
+  { num: 8, title: 'После дождя' },
+];
+
+let DB = null, currentEp = null, epData = {}, pendingUploadEp = null, isAdmin = false;
+
+function getStoredPwd() { return localStorage.getItem(ADMIN_PWD_KEY) || DEFAULT_PWD; }
+function checkPwd() {
+  const val = document.getElementById('pwd-input').value;
+  if (val === getStoredPwd()) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    closeAdminModal(); enterAdminMode();
+  } else {
+    document.getElementById('pwd-error').classList.add('show');
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+function changePassword() {
+  const np = prompt('Введите новый пароль (мин. 4 символа):');
+  if (!np || np.length < 4) { toast('Пароль слишком короткий', 'error'); return; }
+  const np2 = prompt('Повторите новый пароль:');
+  if (np !== np2) { toast('Пароли не совпадают', 'error'); return; }
+  localStorage.setItem(ADMIN_PWD_KEY, np);
+  toast('✓ Пароль успешно изменён', 'success');
+}
+function openAdminModal() {
+  document.getElementById('admin-modal').classList.add('open');
+  setTimeout(() => document.getElementById('pwd-input').focus(), 100);
+}
+function closeAdminModal() {
+  document.getElementById('admin-modal').classList.remove('open');
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('pwd-error').classList.remove('show');
+}
+document.getElementById('admin-modal').addEventListener('click', function(e) { if (e.target === this) closeAdminModal(); });
+function toggleAdmin() { if (isAdmin) exitAdminMode(); else openAdminModal(); }
+function enterAdminMode() {
+  isAdmin = true; document.body.classList.add('admin-mode');
+  document.getElementById('admin-btn').textContent = 'Выйти из режима админа';
+  document.getElementById('admin-btn').classList.add('active');
+  document.getElementById('admin-status-label').style.display = 'inline';
+  buildGrid(); toast('✓ Вы вошли как администратор', 'success');
+}
+function exitAdminMode() {
+  isAdmin = false; sessionStorage.removeItem(SESSION_KEY);
+  document.body.classList.remove('admin-mode');
+  document.getElementById('admin-btn').textContent = 'Войти как админ';
+  document.getElementById('admin-btn').classList.remove('active');
+  document.getElementById('admin-status-label').style.display = 'none';
+  buildGrid(); toast('Вы вышли из режима администратора');
+}
+
+function openDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open('bridgerton_videos', 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore('videos', { keyPath: 'ep' });
+    req.onsuccess = e => res(e.target.result); req.onerror = e => rej(e);
+  });
+}
+function dbPut(ep, obj) {
+  return new Promise((res, rej) => {
+    const tx = DB.transaction('videos', 'readwrite');
+    tx.objectStore('videos').put({ ep, ...obj });
+    tx.oncomplete = res; tx.onerror = rej;
+  });
+}
+function dbDelete(ep) {
+  return new Promise((res, rej) => {
+    const tx = DB.transaction('videos', 'readwrite');
+    tx.objectStore('videos').delete(ep);
+    tx.oncomplete = res; tx.onerror = rej;
+  });
+}
+function dbGetAll() {
+  return new Promise((res, rej) => {
+    const tx = DB.transaction('videos', 'readonly');
+    const req = tx.objectStore('videos').getAll();
+    req.onsuccess = e => res(e.target.result); req.onerror = rej;
+  });
+}
+
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'show ' + type;
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => el.className = '', 3500);
+}
+
+function mergeEpData(localItems) {
+  epData = {};
+  for (const [ep, url] of Object.entries(SHARED_URLS)) {
+    epData[parseInt(ep)] = { type: 'url', url, name: `Серия ${ep} (общий URL)`, shared: true };
+  }
+  for (const item of localItems) {
+    epData[item.ep] = { type: item.type, blob: item.blob, url: item.url, name: item.name, shared: false };
+  }
+}
+
+function buildGrid() {
+  const grid = document.getElementById('episodes-grid');
+  const sel = document.getElementById('ep-select');
+  grid.innerHTML = ''; sel.innerHTML = '<option value="">— Серия —</option>';
+
+  EPISODES.forEach(ep => {
+    const data = epData[ep.num];
+    const hasVideo = !!data;
+    const isShared = data && data.shared;
+    const card = document.createElement('div');
+    card.className = 'episode-card' + (currentEp === ep.num ? ' active' : '');
+    card.id = `card-${ep.num}`;
+    const adminBtns = isAdmin ? `
+      <button class="ep-upload-btn" onclick="triggerUpload(${ep.num},event)">${hasVideo ? '↑ Заменить файл' : '↑ Загрузить файл'}</button>
+      ${hasVideo && !isShared ? `<button class="ep-upload-btn" style="color:#c0556a;border-color:rgba(192,85,106,0.3);" onclick="deleteEp(${ep.num},event)">✕ Удалить серию</button>` : ''}
+    ` : '';
+    const sharedBadge = isShared ? `<span style="font-size:0.6rem;color:var(--green2);letter-spacing:0.05em;">🌐 общий</span>` : '';
+    card.innerHTML = `
+      <div class="ep-thumb">
+        <div class="ep-number-bg">${String(ep.num).padStart(2,'0')}</div>
+        <div class="play-overlay"><div class="play-overlay-icon">▶</div></div>
+      </div>
+      <div class="ep-info">
+        <div class="ep-num" style="display:flex;justify-content:space-between;align-items:center;">
+          <span>S01 · E${String(ep.num).padStart(2,'0')}</span>${sharedBadge}
+        </div>
+        <div class="ep-title">${ep.title}</div>
+        <div class="ep-status ${hasVideo?'uploaded':'empty'}">${hasVideo ? '● Доступно для просмотра' : '○ Нет видео'}</div>
+        ${adminBtns}
+      </div>`;
+    if (hasVideo) {
+      card.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') return; playEpisode(ep.num); });
+    } else if (!isAdmin) { card.style.opacity = '0.5'; card.style.cursor = 'default'; }
+    grid.appendChild(card);
+    const opt = document.createElement('option');
+    opt.value = ep.num;
+    opt.textContent = `E${String(ep.num).padStart(2,'0')} — ${ep.title}`;
+    sel.appendChild(opt);
+  });
+  updateBadge(); updateStorage();
+}
+
+function updateBadge() {
+  const count = Object.keys(epData).length;
+  document.getElementById('ep-count-badge').textContent = `${count} / 8 серий`;
+}
+
+async function playEpisode(num) {
+  currentEp = num;
+  const data = epData[num]; if (!data) return;
+  document.querySelectorAll('.episode-card').forEach(c => c.classList.remove('active'));
+  const card = document.getElementById(`card-${num}`);
+  if (card) card.classList.add('active');
+  const video = document.getElementById('main-video');
+  const placeholder = document.getElementById('player-placeholder');
+  video.style.display = 'block'; placeholder.style.display = 'none';
+  if (data.type === 'blob') { video.src = URL.createObjectURL(data.blob); } else { video.src = data.url; }
+  video.play();
+  const ep = EPISODES.find(e => e.num === num);
+  document.getElementById('now-playing').textContent = `S01 · E${String(num).padStart(2,'0')} — ${ep ? ep.title : 'Бриджертоны'}`;
+}
+
+function changeEp(dir) {
+  if (currentEp === null) { currentEp = 1; }
+  const next = currentEp + dir;
+  if (next < 1 || next > 8) return;
+  if (epData[next]) playEpisode(next);
+  else { currentEp = next; toast(`Серия ${next} не загружена`, 'error'); }
+}
+
+function triggerUpload(epNum, e) {
+  e.stopPropagation(); pendingUploadEp = epNum;
+  document.getElementById('file-input').click();
+}
+
+document.getElementById('file-input').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file || pendingUploadEp === null) return;
+  const epNum = pendingUploadEp; pendingUploadEp = null; e.target.value = '';
+  const prog = document.getElementById('upload-progress');
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('upload-label');
+  prog.style.display = 'block';
+  label.textContent = `Сохранение серии ${epNum} (${(file.size/1024/1024).toFixed(1)} МБ)...`;
+  fill.style.width = '0%';
+  try {
+    let p = 0;
+    const iv = setInterval(() => { p = Math.min(p+4,85); fill.style.width=p+'%'; }, 80);
+    await dbPut(epNum, { type:'blob', blob:file, name:file.name });
+    clearInterval(iv); fill.style.width = '100%';
+    epData[epNum] = { type:'blob', blob:file, name:file.name, shared:false };
+    setTimeout(() => prog.style.display='none', 800);
+    toast(`✓ Серия ${epNum} сохранена (${(file.size/1024/1024).toFixed(1)} МБ) — только локально`, 'success');
+    buildGrid();
+  } catch(err) { prog.style.display = 'none'; toast('Ошибка: ' + err.message, 'error'); }
+});
+
+async function deleteEp(num, e) {
+  e.stopPropagation();
+  if (!confirm(`Удалить серию ${num}?`)) return;
+  await dbDelete(num); delete epData[num];
+  if (currentEp === num) {
+    currentEp = null;
+    document.getElementById('main-video').style.display = 'none';
+    document.getElementById('player-placeholder').style.display = '';
+    document.getElementById('now-playing').textContent = '— Выберите серию —';
+  }
+  buildGrid(); toast(`Серия ${num} удалена`);
+}
+
+async function saveUrl() {
+  const epNum = parseInt(document.getElementById('ep-select').value);
+  const url = document.getElementById('url-input').value.trim();
+  if (!epNum || !url) { toast('Выберите серию и введите URL', 'error'); return; }
+  SHARED_URLS[epNum] = url;
+  epData[epNum] = { type:'url', url, name:`Серия ${epNum} (общий URL)`, shared:true };
+  document.getElementById('url-input').value = '';
+  buildGrid(); toast(`✓ URL серии ${epNum} сохранён. Скачайте обновлённую страницу!`, 'success');
+}
+
+function exportPageWithUrls() {
+  const pageHtml = document.documentElement.outerHTML;
+  const updatedHtml = pageHtml.replace(/let SHARED_URLS = \{.*?\};/s, `let SHARED_URLS = ${JSON.stringify(SHARED_URLS)};`);
+  const blob = new Blob([updatedHtml], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'bridgerton-s1.html'; a.click();
+  toast('✓ Файл скачан — замените страницу на сервере', 'success');
+}
+
+async function clearAll() {
+  if (!confirm('Удалить все локальные видео?')) return;
+  const all = await dbGetAll();
+  for (const item of all) await dbDelete(item.ep);
+  mergeEpData([]); currentEp = null;
+  document.getElementById('main-video').style.display = 'none';
+  document.getElementById('player-placeholder').style.display = '';
+  document.getElementById('now-playing').textContent = '— Выберите серию —';
+  buildGrid(); toast('Локальные файлы очищены');
+}
+
+function exportLinks() {
+  const lines = Object.entries(epData).map(([n,d]) => `Серия ${n}: ${d.type==='url' ? d.url : '[локальный файл: '+d.name+']' }`);
+  if (!lines.length) { toast('Нет серий', 'error'); return; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([lines.join('\n')], {type:'text/plain'}));
+  a.download = 'bridgerton_s1_links.txt'; a.click();
+}
+
+async function updateStorage() {
+  try {
+    if ('storage' in navigator && 'estimate' in navigator.storage) {
+      const { usage, quota } = await navigator.storage.estimate();
+      document.getElementById('storage-size').textContent = `${(usage/1024/1024).toFixed(1)} МБ / ~${(quota/1024/1024/1024).toFixed(1)} ГБ`;
+      document.getElementById('storage-fill').style.width = Math.min((usage/quota)*100, 100) + '%';
+    }
+  } catch(e) {}
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(document.getElementById('share-link').value).then(() => toast('Ссылка скопирована!', 'success'));
+}
+
+document.getElementById('share-link').value = window.location.href;
+
+async function init() {
+  DB = await openDB();
+  const all = await dbGetAll();
+  mergeEpData(all);
+  if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    isAdmin = true; document.body.classList.add('admin-mode');
+    document.getElementById('admin-btn').textContent = 'Выйти из режима админа';
+    document.getElementById('admin-btn').classList.add('active');
+    document.getElementById('admin-status-label').style.display = 'inline';
+  }
+  buildGrid();
+  const hash = window.location.hash;
+  if (hash.startsWith('#ep')) {
+    const num = parseInt(hash.slice(3));
+    if (epData[num]) setTimeout(() => playEpisode(num), 300);
+  }
+}
+
+init().catch(e => console.error(e));
+</script>
+</body>
+</html>
